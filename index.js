@@ -27,7 +27,7 @@ app.use(allowCrossDomain);
 app.get("/getRestsByName", async (req, res) => {
 
     try {
-        let dbResponse = await db.db.collection('restaurants_copy').find({ $text: { $search: req.query.name } }).toArray();
+        let dbResponse = await db.db.collection('restaurants').find({ $text: { $search: req.query.name } }).toArray();
         let obj = {}
         if(dbResponse.length === 0) {
             obj.Result = "Sorry, no restaurants found";
@@ -46,7 +46,7 @@ app.get("/getRestsByName", async (req, res) => {
 app.post("/transaction", async (req, res) => {
     try {
         
-        await db.db.collection('users_copy').updateOne({
+        await db.db.collection('users').updateOne({
             "id": req.body.id
         },{
             $inc: {
@@ -61,7 +61,7 @@ app.post("/transaction", async (req, res) => {
                 }                
             }
         }) 
-        await db.db.collection('restaurants_copy').updateOne({
+        await db.db.collection('restaurants').updateOne({
             "restaurantName": req.body.restaurantName
         },{
             $inc: {
@@ -83,7 +83,7 @@ app.get("/getRestsWithinPriceRange", async (req, res) => {
 
     try {
         let priceRange = req.query.priceRange.split("-")
-        let dbResponse = await db.db.collection('restaurants_copy').aggregate([
+        let dbResponse = await db.db.collection('restaurants').aggregate([
             {
                 $project: {
                     restaurantName: 1,
